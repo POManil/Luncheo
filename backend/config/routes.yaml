@@ -1,5 +1,5 @@
 controllers:
     resource:
-        path: ../src/Example/API/Controller/
-        namespace: App\API\Example\Controller
+        path: ../src/Example/API
+        namespace: App\Example\API\Controller
     type: attribute

@@ -17,8 +17,11 @@ services:
         resource: '../src/'
         exclude:
             - '../src/DependencyInjection/'
-            - '../src/Entity/'
+            # - '../src/Example/Domain/Model'
+            # - '../src/Example/Infrastructure/DoctrineEntity'
             - '../src/Kernel.php'
+        #\Example\Domain\Repository\ExampleRepositoryInterface: '@App\Example\Infrastructure\DoctrineRepository'
+        
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

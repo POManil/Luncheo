@@ -9,21 +9,25 @@ Entity "User" as user #PowderBlue {
 }
 
 Entity "Order" as order #PapayaWhip {
-  #<u> id
-  + price
   + orderDate
   + isPaid
-  - userId
-  - sandwichId
+}
+
+Entity "OrderLine" as orderLine #PapayaWhip {
+  - <u>userId
+  - <u>sandwichId
+  + price
+  + quantity
 }
 
 Entity "Sandwich" as sandwich #Pink {
   #<u> id
-  + price
+  + unitPrice
   + name
 }
 
-user ||-right-o{ order 
-sandwich ||-left-o{ order 
+user ||-right-o{ orderLine 
+sandwich ||-left-o{ orderLine
+order ||-down-o{ orderLine
 
 @enduml
