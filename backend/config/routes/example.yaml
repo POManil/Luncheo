@@ -1,6 +1,6 @@
 hello_world:
   path: /hello-world
-  controller: App\Controller\ExamplController::helloWorld
+  controller: App\Controller\ExampleController::helloWorld
   methods: [GET]
 
 get_changelog:
