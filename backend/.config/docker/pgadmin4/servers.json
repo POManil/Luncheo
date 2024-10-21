@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "luncheo-dev": {
+      "Name": "Luncheo Dev",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "luncheo-dev",
+      "Username": "luncheo",
+      "PassFile": "/var/lib/pgadmin/pgpass",
+      "SSLMode": "prefer"
+    }
+  }
+}
