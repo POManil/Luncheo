@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Controller;
+namespace App\API\Example\Controller;
 
-use App\Repository\ExampleRepository;
+use App\Example\Domain\Repository\ExampleRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -13,7 +13,7 @@ class ExampleController extends AbstractController
     return new JsonResponse(['message' => 'Hello, world!']);
   }
 
-  public function getAll(ExampleRepository $repository): JsonResponse
+  public function getAll(ExampleRepositoryInterface $repository): JsonResponse
   {    
     return new JsonResponse(['data' => $repository->getAll()]);
   }

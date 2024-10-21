@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Entity;
+namespace App\Example\Infrastructure\DoctrineEntity;
 
-use App\Repository\ExampleRepository;
+use App\Example\Infrastructure\DoctrineRepository\ExampleRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ExampleRepository::class)]

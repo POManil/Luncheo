@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Repository;
+namespace App\Example\Infrastructure\DoctrineRepository;
 
-use App\Entity\Example;
+use App\Example\Domain\Repository\ExampleRepositoryInterface;
+use App\Example\Infrastructure\DoctrineEntity\Example;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
-class ExampleRepository extends ServiceEntityRepository
+class ExampleRepository extends ServiceEntityRepository implements ExampleRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
