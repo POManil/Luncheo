@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\DTO\UserDTO;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -18,25 +19,22 @@ class User
   private ?int $id = null;
 
   #[ORM\Column(type: 'string')]
-  #[Assert\NotBlank]
-  #[Assert\Length(min: 2)]
-  #[Assert\Regex(pattern: UserValidator::NAME_REGEX, message: UserValidator::FIRSTNAME_MESSAGE)]
+  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
+  #[Assert\Regex(pattern: UserValidator::NAME_REGEX, message: UserValidator::FIRSTNAME_REGEX_MESSAGE)]
   private string $firstname;
 
   #[ORM\Column(type: 'string')]
-  #[Assert\NotBlank]
-  #[Assert\Length(min: 2)]
-  #[Assert\Regex(pattern: UserValidator::NAME_REGEX, message: UserValidator::LASTNAME_MESSAGE)]
+  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
+  #[Assert\Regex(pattern: UserValidator::NAME_REGEX, message: UserValidator::LASTNAME_REGEX_MESSAGE)]
   private string $lastname;
 
   #[ORM\Column(type: 'string', unique: 'true')]
-  #[Assert\NotBlank]
+  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
   #[Assert\Regex(pattern: UserValidator::EMAIL_REGEX, message: UserValidator::EMAIL_MESSAGE)]
   private string $email;
 
   #[ORM\Column(type: 'string', name: '`password`')]
-  #[Assert\NotBlank]
-  #[Assert\Length(min: 6)]
+  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
   #[Assert\Regex(pattern: UserValidator::PASSWORD_REGEX, message: UserValidator::PASSWORD_MESSAGE)]
   private string $password;
 

@@ -7,3 +7,13 @@ get_by_id:
   path: /user/{id}
   controller: App\Controller\UserController::getUserById
   methods: [GET]
+
+register:
+  path: /user/register
+  controller: App\Controller\UserController::register
+  methods: [POST]
+
+login:
+  path: /user/login
+  controller: App\Controller\UserController::login
+  methods: [POST]
