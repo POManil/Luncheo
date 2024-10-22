@@ -2,32 +2,56 @@
 
 namespace App\Controller;
 
-use App\DTO\UserDTO;
-use App\Repository\User\UserRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Psr\Log\LoggerInterface;
+use Doctrine\DBAL\Exception as DBALException;
+
+use App\DTO\UserDTO;
+use App\Repository\User\UserRepositoryInterface;
 
 class UserController extends AbstractController
 {
   private $repository;
+  private $logger;
 
-  public function __construct(UserRepositoryInterface $repository)
+  public function __construct(UserRepositoryInterface $repository, LoggerInterface $logger)
   {
     $this->repository = $repository;
+    $this->logger = $logger;
   }
 
   public function getAll(): JsonResponse
   {
-    $userEntities = $this->repository->getAll();
-    $userDtos = array_map(fn($user) => UserDTO::mapFromUser($user), $userEntities);
+    try {
+      $userEntities = $this->repository->getAll();
+      $userDtos = array_map(fn($user) => UserDTO::mapFromUser($user), $userEntities);
 
-    return new JsonResponse(['users' => $userDtos]);
+      return new JsonResponse(['users' => $userDtos]);
+
+    } catch (\Exception $e) {
+      $this->logger->error($e);
+
+      return new JsonResponse(["message" => "Une erreur impréveu est survenue"], 500);
+    }
   }
 
   public function getUserById(int $id): JsonResponse
   {
-    $user = UserDTO::mapFromUser($this->repository->getById($id));
+    try {
+      $userEntity = $this->repository->getById($id);
 
-    return new JsonResponse($user);
+      if (empty($userEntity)) {
+        return new JsonResponse(["message" => "User not found."], 404);
+      }
+
+      $userDto = UserDTO::mapFromUser($userEntity);
+      return new JsonResponse($userDto);
+
+    } catch (\Exception $e) {
+      $this->logger->error($e);
+
+      return new JsonResponse(["message" => "Une erreur impréveu est survenue"], 500);
+    }
   }
 }
