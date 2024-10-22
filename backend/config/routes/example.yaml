@@ -1,9 +1,0 @@
-hello_world:
-  path: /hello-world
-  controller: App\Controller\ExampleController::helloWorld
-  methods: [GET]
-
-get_changelog:
-  path: /api/examples
-  controller: App\Controller\ExampleController::getAll
-  methods: [GET]

@@ -15,23 +15,23 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
 
   public function getAll(): array
   {
-    $users = $this->createQueryBuilder('u')
+    $queryResult = $this->createQueryBuilder('u')
       ->select('u')
       ->getQuery()
       ->getResult();
 
-    return $users;
+    return $queryResult;
   }
 
-  public function getById(int $id): User
+  public function getById(int $id): ?User
   {
-    $user = $this->createQueryBuilder('u')
+    $queryResult = $this->createQueryBuilder('u')
       ->where('u.id = :id')
       ->select('u')
       ->getQuery()
       ->setParameter('id', $id)
-      ->getResult()[0];
-
-    return $user;
+      ->getResult();
+    
+    return !empty($queryResult) ? $queryResult[0] : null;
   }
 }
