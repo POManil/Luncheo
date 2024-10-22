@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Repository\ExampleRepositoryInterface;
+use App\Repository\Example\ExampleRepositoryInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 

@@ -1,0 +1,35 @@
+@startuml schemaEA
+
+Entity "User" as user #PowderBlue {
+  #<u> id
+  + firstname
+  + lastname
+  + email
+  + password
+}
+
+Entity "Order" as order #PapayaWhip {
+  #<u> id
+  + orderDate
+  + isPaid
+}
+
+Entity "OrderLine" as orderLine #PapayaWhip {
+  - <u>orderId
+  - <u>userId
+  - <u>sandwichId
+  + price
+  + quantity
+}
+
+Entity "Sandwich" as sandwich #Pink {
+  #<u> id
+  + unitPrice
+  + name
+}
+
+user ||-right-o{ orderLine 
+sandwich ||-left-o{ orderLine
+order ||-down-o{ orderLine
+
+@enduml

@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\ExampleRepository;
+use App\Repository\Example\ExampleRepositoryInterface;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: ExampleRepository::class)]
+#[ORM\Entity(repositoryClass: ExampleRepositoryInterface::class)]
 class Example
 {
     #[ORM\Id]
