@@ -21,26 +21,40 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
   {
     $queryResult = $this->createQueryBuilder('o')
     ->select('o', 'ol', 'u', 's')
-    ->join('o.lines', 'ol')
-    ->join('ol.user', 'u')
-    ->join('ol.sandwich', 's')
+    ->leftJoin('o.lines', 'ol')
+    ->leftJoin('ol.user', 'u')
+    ->leftJoin('ol.sandwich', 's')
     ->getQuery()
     ->getResult();
 
     return $queryResult;
   }
 
-  public function createOrder(Order $order): int
+  public function getById(int $id): ?Order
   {
-    if (is_null($order)) {
-      throw new InvalidArgumentException("`createOrder`: param 'order' should not be null.");
-    }
+    $queryResult = $this->createQueryBuilder('o')
+    ->select('o', 'ol', 'u', 's')
+    ->leftJoin('o.lines', 'ol')
+    ->leftJoin('ol.user', 'u')
+    ->leftJoin('ol.sandwich', 's')
+    ->where("o.id = :id")
+    ->getQuery()
+    ->setParameter('id', $id)
+    ->getResult();
+
+    dump("queryResult:");
+    dump($queryResult);
+    
+    return !empty($queryResult) ? $queryResult[0] : null;
+  }
+
+  public function createOrder(): int
+  {
+    $order = new Order();
+    $order->setPaid(false);
+    $order->setOrderDate(new \DateTime());
 
     $entityManager = $this->getEntityManager();
-
-    if(is_null($order->getOrderDate())) {
-      $order->setOrderDate(new \DateTime());
-    }
 
     try {
       $entityManager->persist($order);

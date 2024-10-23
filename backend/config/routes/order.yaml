@@ -7,3 +7,8 @@ create_order:
   path: /order
   controller: App\Controller\OrderController::createOrder
   methods: [POST]
+
+add_order_line:
+  path: /order/line
+  controller: App\Controller\OrderController::addOrderLine
+  methods: [POST]

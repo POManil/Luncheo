@@ -8,7 +8,8 @@ use App\Entity\OrderLine;
 interface OrderRepositoryInterface
 {
   public function getAll(): array;
-  public function createOrder(Order $order): int;
+  public function getById(int $id): ?Order;
+  public function createOrder(): int;
   public function addOrderLine(Order $order, OrderLine $line): void;
   public function removeOrderLine(OrderLine $line): void;
 }

@@ -29,6 +29,7 @@ class OrderLine
   private Sandwich $sandwich;
 
   #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+  #[Assert\GreaterThanOrEqual(value: .0, message: CommonRules::NOT_NEGATIVE_MESSAGE)]
   private float $price;
 
   #[ORM\Column(type: 'integer')]

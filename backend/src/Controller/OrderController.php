@@ -9,6 +9,8 @@ use Psr\Log\LoggerInterface;
 use App\DTO\OrderDTO;
 use App\DTO\OrderLineDTO;
 use App\Repository\Order\OrderRepositoryInterface;
+use App\Repository\Sandwich\SandwichRepositoryInterface;
+use App\Repository\User\UserRepositoryInterface;
 use App\Validation\ConstraintValidator;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -16,19 +18,25 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 class OrderController extends AbstractController
 {
-  private $repository;
+  private $orderRepository;
+  private $userRepository;
+  private $sandwichRepository;
   private $validator;
   private $serializer;
   private $logger;
 
   public function __construct (
-    OrderRepositoryInterface $repository,
+    OrderRepositoryInterface $orderRepository,
+    UserRepositoryInterface $userRepository,
+    SandwichRepositoryInterface $sandwichRepository,
     ValidatorInterface $validator, 
     SerializerInterface $serializer,
     LoggerInterface $logger
   )
   {
-    $this->repository = $repository;
+    $this->orderRepository = $orderRepository;
+    $this->userRepository = $userRepository;
+    $this->sandwichRepository = $sandwichRepository;
     $this->validator = $validator;
     $this->serializer = $serializer;
     $this->logger = $logger;
@@ -37,22 +45,10 @@ class OrderController extends AbstractController
   public function getAll(): JsonResponse
   {
     try {
-      $orderEntities = $this->repository->getAll();
+      $orderEntities = $this->orderRepository->getAll();
       $orderDtos = array_map(fn($order) => OrderDTO::mapFromOrder($order), $orderEntities);
-      // $orderDtos = [];
 
-      // foreach($orderEntities as $order) {
-      //   $orderDto = OrderDTO::mapFromOrder($order);
-      //   $orderLinesDto = [];
-      //   foreach($order->getLines() as $line) {
-      //     $lineDto = OrderLineDTO::mapFromOrderLine($line);
-      //     $orderLinesDto[] = $lineDto;
-      //   }
-      //   $orderDto->lines = $orderLinesDto;
-      //   $orderDtos[] = $orderDto;
-      // }
-
-      return new JsonResponse(['Orders' => $orderDtos]);
+      return new JsonResponse($orderDtos);
 
     } catch (\Exception $e) {
       $this->logger->error($e);
@@ -61,28 +57,69 @@ class OrderController extends AbstractController
     }
   }
 
-  public function createOrder(#[MapRequestPayload] OrderDTO $dto): JsonResponse
+  public function createOrder(): JsonResponse
   {
     try {
-      $order = OrderDTO::mapToOrder($dto);
+      $orderId = $this->orderRepository->createOrder();
 
-      $errors = $this->validator->validate($order);
+      return new JsonResponse(["message" => "La commande a bien été créée!", "orderId" => $orderId], 201);
+    } catch (\Exception $e) {
+      $this->logger->error($e);
+
+      return new JsonResponse(["message" => "Une erreur imprévue est survenue"], 500);
+    }
+  }
+
+  public function addOrderLine(#[MapRequestPayload] OrderLineDTO $dto): JsonResponse 
+  {
+    try {
+
+      dump($dto);
+
+      $orderEntity = $this->orderRepository->getById($dto->orderId);
+      if(is_null($orderEntity)) {
+        return new JsonResponse(["message" => "Commande non-trouvée"], 404);
+      }
+
+      $userEntity = $this->userRepository->getById($dto->userId);
+      if(is_null($userEntity)) {
+        return new JsonResponse(["message" => "Utilisateur non-trouvé"], 404);
+      }
+
+      $sandwichEntity = $this->sandwichRepository->getById($dto->sandwichId);
+      if(is_null($sandwichEntity)) {
+        return new JsonResponse(["message" => "Sandwich non-trouvé"], 404);
+      }
+
+      dump("jusqu'ici tout va bien");
+      dump("order entity");
+      dump($orderEntity);
+      dump("user entity");
+      dump($userEntity);
+      dump("sandwich entity");
+      dump($sandwichEntity);
+
+      $orderLineEntity = OrderLineDTO::mapToOrderLine(
+        $dto, 
+        $sandwichEntity,
+        $orderEntity,
+        $userEntity
+      );
+
+      $errors = $this->validator->validate($orderLineEntity);
       $messages = ConstraintValidator::handleViolationErrors($errors);
 
       if(count($errors) > 0) {
         return new JsonResponse(['validation' => $messages], 400);
-      }
+      }  
 
-      return new JsonResponse(["message" => "La commande a bien été créée!"], 201);
+      $this->orderRepository->addOrderLine($orderEntity, $orderLineEntity);
+
+      return new JsonResponse('La commande du sandwich ' .$sandwichEntity->getLabel() . ' a bien été passée.', 200);
     } catch (\Exception $e) {
       $this->logger->error($e);
 
       return new JsonResponse(["message" => "Une erreur imprévue est survenue"], 500);
     }
-  }
-
-  public function addOrderLine(mixed $request): JsonResponse 
-  {
-    return new JsonResponse('not yet implemented', 200);
   }
 }
