@@ -1,4 +1,4 @@
-get_all:
+user_get_all:
   path: /user/all
   controller: App\Controller\UserController::getAll
   methods: [GET]

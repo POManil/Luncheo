@@ -1,0 +1,4 @@
+order_get_all:
+  path: /order/all
+  controller: App\Controller\OrderController::getAll
+  methods: [GET]

@@ -2,16 +2,15 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Psr\Log\LoggerInterface;
 
 use App\DTO\UserDTO;
 use App\Repository\User\UserRepositoryInterface;
 use App\Validation\ConstraintValidator;
-use App\Validation\UserValidator;
-use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -19,7 +18,11 @@ class UserController extends AbstractController
   private $validator;
   private $logger;
 
-  public function __construct(UserRepositoryInterface $repository, ValidatorInterface $validator, LoggerInterface $logger)
+  public function __construct (
+    UserRepositoryInterface $repository, 
+    ValidatorInterface $validator, 
+    LoggerInterface $logger
+  )
   {
     $this->repository = $repository;
     $this->validator = $validator;
