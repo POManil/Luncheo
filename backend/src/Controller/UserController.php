@@ -83,7 +83,7 @@ class UserController extends AbstractController
       $insertionResult = $this->repository->createUser($user);
       $this->logger->info($insertionResult);
 
-      return new JsonResponse(["message" => "Votre compte a bien été créé!"]);
+      return new JsonResponse(["message" => "Votre compte a bien été créé!"], 201);
     } catch (\Exception $e) {
       $this->logger->error($e);
 

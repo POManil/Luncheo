@@ -2,10 +2,8 @@
 
 namespace App\Validation\Rules;
 
-class UserRules
+abstract class UserRules
 {
-  public const NOT_NULL_MESSAGE = 'Cette valeur ne peut pas être vide';
-
   public const NAME_REGEX = '/^[A-Z][a-zA-Z]+$/';
   public const FIRSTNAME_REGEX_MESSAGE = 'Le prénom doit commencer par une majuscule et comporter au moins 2 lettres.'; 
   public const LASTNAME_REGEX_MESSAGE = 'Le nom doit commencer par une majuscule et comporter au moins 2 lettres.';

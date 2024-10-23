@@ -2,3 +2,8 @@ order_get_all:
   path: /order/all
   controller: App\Controller\OrderController::getAll
   methods: [GET]
+
+create_order:
+  path: /order
+  controller: App\Controller\OrderController::createOrder
+  methods: [POST]

@@ -62,17 +62,17 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
     return !empty($queryResult) ? $queryResult[0] : null;
   }
 
-  public function createUser(User $user): bool
+  public function createUser(User $user): int
   {
     if(is_null($user)) {
-      throw new InvalidArgumentException("`mapFromUser`: param 'User' should not be null.");
+      throw new InvalidArgumentException("`createUser`: param 'user' should not be null.");
     }
 
     $entityManager = $this->getEntityManager();
     try {
       $entityManager->persist($user);
       $entityManager->flush();
-      return true;
+      return $user->getId();
     } catch (ORMException $e) {
       throw $e;
     }
