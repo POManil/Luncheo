@@ -70,7 +70,7 @@ class OrderController extends AbstractController
     }
   }
 
-  public function addOrderLine(#[MapRequestPayload] OrderLineDTO $dto): JsonResponse 
+  public function upsertOrderLine(#[MapRequestPayload] OrderLineDTO $dto): JsonResponse 
   {
     try {
 
@@ -91,14 +91,6 @@ class OrderController extends AbstractController
         return new JsonResponse(["message" => "Sandwich non-trouvé"], 404);
       }
 
-      dump("jusqu'ici tout va bien");
-      dump("order entity");
-      dump($orderEntity);
-      dump("user entity");
-      dump($userEntity);
-      dump("sandwich entity");
-      dump($sandwichEntity);
-
       $orderLineEntity = OrderLineDTO::mapToOrderLine(
         $dto, 
         $sandwichEntity,
@@ -111,9 +103,9 @@ class OrderController extends AbstractController
 
       if(count($errors) > 0) {
         return new JsonResponse(['validation' => $messages], 400);
-      }  
+      } 
 
-      $this->orderRepository->addOrderLine($orderEntity, $orderLineEntity);
+      $this->orderRepository->upsertOrderLine($orderEntity, $orderLineEntity);
 
       return new JsonResponse('La commande du sandwich ' .$sandwichEntity->getLabel() . ' a bien été passée.', 200);
     } catch (\Exception $e) {

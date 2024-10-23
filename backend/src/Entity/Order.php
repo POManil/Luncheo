@@ -64,12 +64,10 @@ class Order
     return $this->lines;
   }
 
-  public function addLine(OrderLine $line): void
+  public function upsertLine(OrderLine $line): void
   {
-    if (!$this->lines->contains($line)) {
-      $this->lines[] = $line;
-      $line->setOrder($this);  // Associe la ligne avec cette commande
-    }
+    $this->lines[] = $line;
+    $line->setOrder($this);
   }
 
   public function removeLine(OrderLine $line): void

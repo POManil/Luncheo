@@ -54,7 +54,7 @@ class OrderDTO
 
     if(!empty($dto->lines)) {
       foreach($dto->lines as $line) {
-        $order->addLine($line);
+        $order->upsertLine($line);
       }
     }
 

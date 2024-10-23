@@ -7,14 +7,18 @@ use Doctrine\Persistence\ManagerRegistry;
 
 use App\Entity\Order;
 use App\Entity\OrderLine;
+use App\Repository\OrderLine\OrderLineRepositoryInterface;
 use Doctrine\DBAL\Exception\InvalidArgumentException;
 use Doctrine\ORM\Exception\ORMException;
 
 class OrderRepository extends ServiceEntityRepository implements OrderRepositoryInterface
 {
-  public function __construct(ManagerRegistry $registry)
+  private $orderLineRepository;
+
+  public function __construct(ManagerRegistry $registry, OrderLineRepositoryInterface $orderLineRepository)
   {
     parent::__construct($registry, Order::class);
+    $this->orderLineRepository = $orderLineRepository;
   }
 
   public function getAll(): array
@@ -41,9 +45,6 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     ->getQuery()
     ->setParameter('id', $id)
     ->getResult();
-
-    dump("queryResult:");
-    dump($queryResult);
     
     return !empty($queryResult) ? $queryResult[0] : null;
   }
@@ -65,7 +66,7 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     }
   }
 
-  public function addOrderLine(Order $order, OrderLine $line): void
+  public function upsertOrderLine(Order $order, OrderLine $line): void
   {
     if (is_null($order)) {
       throw new InvalidArgumentException("`addOrderLine`: param 'order' should not be null.");
@@ -76,11 +77,23 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     }
 
     $entityManager = $this->getEntityManager();
-    $line->setOrder($order);
-    $order->addLine($line);
+
+    $existingLine = $this->orderLineRepository->getById(
+      $order->getId(),
+      $line->getUser()->getId(),
+      $line->getSandwich()->getId()
+    );
 
     try {
-      $entityManager->persist($line);
+      if(is_null($existingLine)) {
+        $order->upsertLine($line);
+        $entityManager->persist($line);
+      } else {
+        $existingLine->setQuantity($line->getQuantity());
+        $existingLine->setSandwich($line->getSandwich());
+        $existingLine->setUser($line->getUser());
+      }
+
       $entityManager->flush();
     } catch (ORMException $e) {
       throw $e;

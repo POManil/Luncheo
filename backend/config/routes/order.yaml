@@ -8,7 +8,7 @@ create_order:
   controller: App\Controller\OrderController::createOrder
   methods: [POST]
 
-add_order_line:
+upsert_order_line:
   path: /order/line
-  controller: App\Controller\OrderController::addOrderLine
-  methods: [POST]
+  controller: App\Controller\OrderController::upsertOrderLine
+  methods: [POST, PATCH, PUT]
