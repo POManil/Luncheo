@@ -2,12 +2,11 @@
 
 namespace App\Entity;
 
-use App\DTO\UserDTO;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\User\UserRepositoryInterface;
-use App\Validation\UserValidator;
+use App\Validation\Rules\UserRules;
 
 #[ORM\Entity(repositoryClass: UserRepositoryInterface::class)]
 #[ORM\Table(name: '`user`')]
@@ -19,23 +18,23 @@ class User
   private ?int $id = null;
 
   #[ORM\Column(type: 'string')]
-  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
-  #[Assert\Regex(pattern: UserValidator::NAME_REGEX, message: UserValidator::FIRSTNAME_REGEX_MESSAGE)]
+  #[Assert\NotBlank(null, UserRules::NOT_NULL_MESSAGE)]
+  #[Assert\Regex(pattern: UserRules::NAME_REGEX, message: UserRules::FIRSTNAME_REGEX_MESSAGE)]
   private string $firstname;
 
   #[ORM\Column(type: 'string')]
-  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
-  #[Assert\Regex(pattern: UserValidator::NAME_REGEX, message: UserValidator::LASTNAME_REGEX_MESSAGE)]
+  #[Assert\NotBlank(null, UserRules::NOT_NULL_MESSAGE)]
+  #[Assert\Regex(pattern: UserRules::NAME_REGEX, message: UserRules::LASTNAME_REGEX_MESSAGE)]
   private string $lastname;
 
   #[ORM\Column(type: 'string', unique: 'true')]
-  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
-  #[Assert\Regex(pattern: UserValidator::EMAIL_REGEX, message: UserValidator::EMAIL_MESSAGE)]
+  #[Assert\NotBlank(null, UserRules::NOT_NULL_MESSAGE)]
+  #[Assert\Regex(pattern: UserRules::EMAIL_REGEX, message: UserRules::EMAIL_MESSAGE)]
   private string $email;
 
   #[ORM\Column(type: 'string', name: '`password`')]
-  #[Assert\NotBlank(null, UserValidator::NOT_NULL_MESSAGE)]
-  #[Assert\Regex(pattern: UserValidator::PASSWORD_REGEX, message: UserValidator::PASSWORD_MESSAGE)]
+  #[Assert\NotBlank(null, UserRules::NOT_NULL_MESSAGE)]
+  #[Assert\Regex(pattern: UserRules::PASSWORD_REGEX, message: UserRules::PASSWORD_MESSAGE)]
   private string $password;
 
   public function getId(): ?int

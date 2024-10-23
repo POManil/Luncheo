@@ -1,10 +1,8 @@
 <?php
 
-namespace App\Validation;
+namespace App\Validation\Rules;
 
-use Symfony\Component\Validator\ConstraintViolationListInterface;
-
-class UserValidator
+class UserRules
 {
   public const NOT_NULL_MESSAGE = 'Cette valeur ne peut pas être vide';
 
@@ -17,15 +15,4 @@ class UserValidator
   
   public const PASSWORD_REGEX = '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/';
   public const PASSWORD_MESSAGE = 'Le mot de passe doit contenir au moins 6 caractères, dont une majuscule, une minuscule et un chiffre.';
-
-  static function handleViolationErrors (ConstraintViolationListInterface $violations): array
-  {
-    $errorMessages = [];
-
-    foreach($violations as $violation) {
-      $errorMessages[] = [$violation->getPropertyPath() => $violation->getMessage()];
-    }
-
-    return $errorMessages;
-  }
 }

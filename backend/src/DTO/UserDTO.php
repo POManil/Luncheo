@@ -13,13 +13,16 @@ class UserDTO
   public ?string $email;
   public ?string $password;
 
-  private function __construct(?int $id, ?string $firstname, ?string $lastname, ?string $email, ?string $password)
+  public function __construct(?int $id, ?string $firstname, ?string $lastname, ?string $email, ?string $password = null)
   {
     $this->id = $id;
     $this->firstname = $firstname;
     $this->lastname = $lastname;
     $this->email = $email;
-    $this->password = $password;
+
+    if(!is_null($password)) {
+      $this->password = $password;
+    }
   }
 
   public static function mapFromUser(User $user): self
@@ -32,8 +35,7 @@ class UserDTO
       $user->getId(),
       $user->getFirstname(),
       $user->getLastname(),
-      $user->getEmail(),
-      null
+      $user->getEmail()
     );
   }
 

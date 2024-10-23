@@ -7,13 +7,10 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Log\LoggerInterface;
 
 use App\DTO\UserDTO;
-use App\Entity\User;
 use App\Repository\User\UserRepositoryInterface;
+use App\Validation\ConstraintValidator;
 use App\Validation\UserValidator;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
@@ -69,7 +66,7 @@ class UserController extends AbstractController
       $user = UserDTO::mapToUser($dto);
       
       $errors = $this->validator->validate($user);
-      $messages = UserValidator::handleViolationErrors($errors);
+      $messages = ConstraintValidator::handleViolationErrors($errors);
 
       if(count($errors) > 0) {
         return new JsonResponse(["validation" => $messages], 400);
