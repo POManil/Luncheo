@@ -3,7 +3,6 @@
 namespace App\DTO;
 
 use App\Entity\Order;
-use InvalidArgumentException;
 use App\Entity\OrderLine;
 use App\Entity\Sandwich;
 use App\Entity\User;
@@ -28,7 +27,7 @@ class OrderLineDTO
   public static function mapFromOrderLine(OrderLine $orderLine): self
   {
     if (is_null($orderLine)) {
-      throw new InvalidArgumentException("`mapFromOrderLine`: param 'orderLine' should not be null.");
+      throw new \InvalidArgumentException("`mapFromOrderLine`: param 'orderLine' should not be null.");
     }
 
     return new self(
@@ -43,19 +42,19 @@ class OrderLineDTO
   public static function mapToOrderLine(self $dto, Sandwich $sandwich, Order $order, User $user): OrderLine
   {
     if (is_null($dto)) {
-      throw new InvalidArgumentException("`mapToOrderLine`: param 'dto' should not be null.");
+      throw new \InvalidArgumentException("`mapToOrderLine`: param 'dto' should not be null.");
     }
 
     if (is_null($sandwich)) {
-      throw new InvalidArgumentException("`mapToOrderLine`: param 'sandwich' should not be null.");
+      throw new \InvalidArgumentException("`mapToOrderLine`: param 'sandwich' should not be null.");
     }  
 
     if (is_null($order)) {
-      throw new InvalidArgumentException("`mapToOrderLine`: param 'order' should not be null.");
+      throw new \InvalidArgumentException("`mapToOrderLine`: param 'order' should not be null.");
     }  
 
     if (is_null($user)) {
-      throw new InvalidArgumentException("`mapToOrderLine`: param 'user' should not be null.");
+      throw new \InvalidArgumentException("`mapToOrderLine`: param 'user' should not be null.");
     }
 
     return new OrderLine(

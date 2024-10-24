@@ -9,8 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Psr\Log\LoggerInterface;
 
 use App\DTO\UserDTO;
-use App\Repository\User\UserRepositoryInterface;
 use App\Validation\ConstraintValidator;
+use App\Repository\User\UserRepositoryInterface;
 
 class UserController extends AbstractController
 {
@@ -44,10 +44,13 @@ class UserController extends AbstractController
     }
   }
 
-  public function getUserById(int $id): JsonResponse
+  public function getUserById(string $id): JsonResponse
   {
+    if(!is_numeric($id)){
+      return new JsonResponse(["validation" => "L'identifiant de l'utilisateur doit être un nombre entier"], 400);
+    }
     try {
-      $userEntity = $this->repository->getById($id);
+      $userEntity = $this->repository->getById((int)$id);
 
       if (empty($userEntity)) {
         return new JsonResponse(["message" => "User not found."], 404);

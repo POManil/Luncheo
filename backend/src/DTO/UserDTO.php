@@ -2,7 +2,6 @@
 
 namespace App\DTO;
 
-use InvalidArgumentException;
 use App\Entity\User;
 
 class UserDTO
@@ -28,7 +27,7 @@ class UserDTO
   public static function mapFromUser(User $user): self
   {
     if(is_null($user)) {
-      throw new InvalidArgumentException("`mapFromUser`: param 'user' should not be null.");
+      throw new \InvalidArgumentException("`mapFromUser`: param 'user' should not be null.");
     }
 
     return new self(
@@ -42,7 +41,7 @@ class UserDTO
   public static function mapToUser(self $dto): User
   {
     if(is_null($dto)) {
-      throw new InvalidArgumentException("`toUser`: param 'dto' should not be null.");
+      throw new \InvalidArgumentException("`toUser`: param 'dto' should not be null.");
     }
 
     $user = new User();

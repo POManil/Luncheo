@@ -14,6 +14,16 @@ class SandwichRepository extends ServiceEntityRepository implements SandwichRepo
     parent::__construct($registry, Sandwich::class);
   }
 
+  public function getAll(): array
+  {
+    $queryResult = $this->createQueryBuilder('s')
+      ->select('s')
+      ->getQuery()
+      ->getResult();
+
+    return $queryResult;
+  }
+
   public function getById(int $id): ?Sandwich
   {
     $queryResult = $this->createQueryBuilder('s')

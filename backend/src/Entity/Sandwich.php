@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Validation\Rules\CommonRules;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
+use App\Validation\Rules\CommonRules;
 use App\Validation\Rules\SandwichRules;
 
 #[ORM\Entity]

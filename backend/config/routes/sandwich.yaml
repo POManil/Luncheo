@@ -1,0 +1,4 @@
+sandwich_get_all:
+  path: /sandwich/all
+  controller: App\Controller\SandwichController::getAll
+  methods: [GET]

@@ -4,6 +4,7 @@ namespace App\Repository\OrderLine;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Exception\ORMException;
 
 use App\Entity\OrderLine;
 
@@ -29,5 +30,22 @@ class OrderLineRepository extends ServiceEntityRepository implements OrderLineRe
       ->getOneOrNullResult();
 
     return $queryResult;
+  }
+
+  public function removeOrderLine(OrderLine $line): void
+  {
+    if (is_null($line)) {
+      throw new \InvalidArgumentException("`removeOrderLine`: param 'line' should not be null.");
+    }
+
+    $entityManager = $this->getEntityManager();
+
+    try {
+      $entityManager->remove($line);
+      $entityManager->flush();
+
+    } catch (ORMException $e) {
+      throw $e;
+    }
   }
 }

@@ -8,7 +8,22 @@ create_order:
   controller: App\Controller\OrderController::createOrder
   methods: [POST]
 
+pay_order:
+  path: /order
+  controller: App\Controller\OrderController::payOrder
+  methods: [PATCH, PUT]
+
 upsert_order_line:
-  path: /order/line
+  path: /order-line
   controller: App\Controller\OrderController::upsertOrderLine
   methods: [POST, PATCH, PUT]
+
+remove_order:
+  path: /order/{id}
+  controller: App\Controller\OrderController::removeOrder
+  methods: [DELETE]
+
+remove_order_line:
+  path: /order-line
+  controller: App\Controller\OrderController::removeOrderLine
+  methods: [DELETE]

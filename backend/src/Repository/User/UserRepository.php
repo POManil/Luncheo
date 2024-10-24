@@ -5,7 +5,6 @@ namespace App\Repository\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Exception\ORMException;
-use InvalidArgumentException;
 
 use App\Entity\User;
 
@@ -65,7 +64,7 @@ class UserRepository extends ServiceEntityRepository implements UserRepositoryIn
   public function createUser(User $user): int
   {
     if(is_null($user)) {
-      throw new InvalidArgumentException("`createUser`: param 'user' should not be null.");
+      throw new \InvalidArgumentException("`createUser`: param 'user' should not be null.");
     }
 
     $entityManager = $this->getEntityManager();

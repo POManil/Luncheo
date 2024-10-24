@@ -8,7 +8,6 @@ use Doctrine\Common\Collections\Collection;
 use Symfony\Component\Validator\Constraints as Assert;
 
 use App\Repository\Order\OrderRepositoryInterface;
-use DateTime;
 
 #[ORM\Entity(repositoryClass: OrderRepositoryInterface::class)]
 #[ORM\Table(name: '`order`')]

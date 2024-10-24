@@ -4,12 +4,11 @@ namespace App\Repository\Order;
 
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Exception\ORMException;
 
 use App\Entity\Order;
 use App\Entity\OrderLine;
 use App\Repository\OrderLine\OrderLineRepositoryInterface;
-use Doctrine\DBAL\Exception\InvalidArgumentException;
-use Doctrine\ORM\Exception\ORMException;
 
 class OrderRepository extends ServiceEntityRepository implements OrderRepositoryInterface
 {
@@ -66,25 +65,44 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     }
   }
 
-  public function upsertOrderLine(Order $order, OrderLine $line): void
+  public function updateOrder(Order $order): void
   {
     if (is_null($order)) {
-      throw new InvalidArgumentException("`addOrderLine`: param 'order' should not be null.");
-    }
-
-    if (is_null($line)) {
-      throw new InvalidArgumentException("`addOrderLine`: param 'line' should not be null.");
+      throw new \InvalidArgumentException("`updateOrder`: param 'order' should not be null.");
     }
 
     $entityManager = $this->getEntityManager();
 
-    $existingLine = $this->orderLineRepository->getById(
-      $order->getId(),
-      $line->getUser()->getId(),
-      $line->getSandwich()->getId()
-    );
-
     try {
+      $orderEntity = $this->getById($order->getId());
+      $orderEntity->setOrderDate($order->getOrderDate());
+      $orderEntity->setPaid($order->isPaid());
+
+      $entityManager->flush();
+    } catch (ORMException $e) {
+      throw $e;
+    }
+  }
+
+  public function upsertOrderLine(Order $order, OrderLine $line): void
+  {
+    if (is_null($order)) {
+      throw new \InvalidArgumentException("`upsertOrderLine`: param 'order' should not be null.");
+    }
+
+    if (is_null($line)) {
+      throw new \InvalidArgumentException("`upsertOrderLine`: param 'line' should not be null.");
+    }
+    
+    $entityManager = $this->getEntityManager();
+    
+    try {
+      $existingLine = $this->orderLineRepository->getById(
+        $order->getId(),
+        $line->getUser()->getId(),
+        $line->getSandwich()->getId()
+      );
+
       if(is_null($existingLine)) {
         $order->upsertLine($line);
         $entityManager->persist($line);
@@ -100,10 +118,10 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     }
   }
 
-  public function removeOrderLine(OrderLine $line): void
+  public function removeOrderLine(Order $order, OrderLine $line): void
   {
     if (is_null($line)) {
-      throw new InvalidArgumentException("`removeOrderLine`: param 'line' should not be null.");
+      throw new \InvalidArgumentException("`removeOrderLine`: param 'line' should not be null.");
     }
 
     $entityManager = $this->getEntityManager();
@@ -115,6 +133,21 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
       }
 
       $entityManager->remove($line);
+      $entityManager->flush();
+    } catch (ORMException $e) {
+      throw $e;
+    }
+  }
+
+  public function removeOrder(Order $order): void
+  {
+    if(is_null($order)) {
+      throw new \InvalidArgumentException("`removeOrder`: param 'order' should not be null.");
+    }
+
+    $entityManager = $this->getEntityManager();
+    try {
+      $entityManager->remove($order);
       $entityManager->flush();
     } catch (ORMException $e) {
       throw $e;
