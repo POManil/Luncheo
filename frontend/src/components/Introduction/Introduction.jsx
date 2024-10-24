@@ -11,10 +11,12 @@ import postgresqlLogo from '../../assets/postgresql.png';
 import reactRouterDomLogo from '../../assets/react-router-dom.png';
 import reactLogo from '../../assets/react.png';
 import symfonyLogo from '../../assets/symfony.png';
+import Header from '../Navigation/Header';
 
 const Introduction = () => {
   return (    
   <>
+    <Header />
     <div>
       <a href="https://opalsolutions.be/fr/" target="_blank">
         <img src={opalLogo} className="logo" alt="Opal Solutions logo" />

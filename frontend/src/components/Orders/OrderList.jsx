@@ -2,6 +2,7 @@ import Order from "./Order";
 import { useOrders } from "../../API/features/orders/useOrders";
 import { Flex } from "antd";
 import { useLocation } from "react-router-dom";
+import Header from "../Navigation/Header";
 
 const OrderList = () => {
   const location = useLocation();
@@ -13,6 +14,7 @@ const OrderList = () => {
 
   return (
     <>
+      <Header/>
       <h2>Liste des commandes</h2>
       <Flex>
         {
