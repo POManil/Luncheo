@@ -5,7 +5,11 @@ import OrderList from "../Orders/OrderList";
 
 const router = createBrowserRouter([
   {
-    path: '/*',
+    path: '/orders',
+    element: <OrderList />
+  },
+  {
+    path: '/orders/:userId',
     element: <OrderList />
   },
   {
@@ -14,7 +18,7 @@ const router = createBrowserRouter([
   },
   {
     path: '*',
-    element: <Navigate to="/welcome" replace />
+    element: <Navigate to="/orders" replace />
   }
 ]);
 

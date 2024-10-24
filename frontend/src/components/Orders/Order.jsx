@@ -5,9 +5,12 @@ import * as Formatter from "../../helpers/formatter";
 import UserDropDown from "../Users/UserDropDown";
 import { useState } from "react";
 import SandwichDropDown from "../Sandwiches/SandwichesDropDown";
-import { useUpsertOrderLines } from "../../API/features/orders/useUpsertOrderLines";
+import { useUpsertOrderLine } from "../../API/features/orders/useUpsertOrderLine";
 import { useUsers } from "../../API/features/users/useUsers";
 import { useSandwiches } from "../../API/features/sandwiches/useSandwiches";
+import { useDeleteOrder } from "../../API/features/orders/useDeleteOrder";
+import { useDeleteOrderLine } from "../../API/features/orders/useDeleteOrderLine";
+
 
 const Order = ({order}) => {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -18,7 +21,10 @@ const Order = ({order}) => {
     quantity: 0
   });
 
-  const upsertOrderLineHandler = useUpsertOrderLines();
+  const upsertOrderLineHandler = useUpsertOrderLine();
+  const deleteOrderHandler = useDeleteOrder();
+  const deleteOrderLineHandler = useDeleteOrderLine();
+
   const users = useUsers({});
   const sandwiches = useSandwiches({});
 
@@ -34,20 +40,33 @@ const Order = ({order}) => {
   }
 
   const toggleEditMode = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     setIsEditMode(!isEditMode);
   }
 
-  const saveOrderLine = async () => {
+  const deleteOrder = async () => {
     try {
-      await upsertOrderLineHandler.mutateAsync({orderLine: newOrderLine});
+      await deleteOrderHandler.mutateAsync({orderId: order.id});
     } catch (error) {
       console.log(error);
     }
   }
 
-  const deleteOrderLine = async (line) => {
-    console.log(line);
+  const saveOrderLine = async () => {
+    try {
+      await upsertOrderLineHandler.mutateAsync({orderLine: newOrderLine});
+      toggleEditMode();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const deleteOrderLine = async (selectedLine) => {
+    try {
+      await deleteOrderLineHandler.mutateAsync({orderLine: selectedLine});
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   const orderTotalPrice = () => order.lines.reduce((result, line) => result + line.price, .0);
@@ -107,6 +126,10 @@ const Order = ({order}) => {
       <Button onClick={toggleEditMode} style={{marginTop: "10px"}}>
       { isEditMode ? "Annuler" : "Editer" }  
       </Button>
+      <Button onClick={deleteOrder} style={{marginTop: "10px"}}>
+        Supprimer 
+      </Button>
+
     </Card>
   )
 }

@@ -1,9 +1,12 @@
-import PropTypes from "prop-types";
 import Order from "./Order";
 import { useOrders } from "../../API/features/orders/useOrders";
 import { Flex } from "antd";
+import { useLocation } from "react-router-dom";
 
-const OrderList = ({ userId }) => {
+const OrderList = () => {
+  const location = useLocation();
+  const userId = location?.userId;
+
   const orders = useOrders({ param: userId });
 
   if (orders.data == null) return <div>Chargement...</div>;
@@ -20,10 +23,6 @@ const OrderList = ({ userId }) => {
       </Flex>
     </>
   );
-}
-
-OrderList.propTypes = {
-  userId: PropTypes.number
 }
 
 export default OrderList;
