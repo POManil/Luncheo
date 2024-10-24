@@ -48,6 +48,21 @@ class OrderRepository extends ServiceEntityRepository implements OrderRepository
     return !empty($queryResult) ? $queryResult[0] : null;
   }
 
+  public function getByUserId(int $userId): array
+  {
+    $queryResult = $this->createQueryBuilder('o')
+    ->select('o', 'ol', 'u', 's')
+    ->leftJoin('o.lines', 'ol')
+    ->leftJoin('ol.user', 'u')
+    ->leftJoin('ol.sandwich', 's')
+    ->where("u.id = :id")
+    ->getQuery()
+    ->setParameter('id', $userId)
+    ->getResult();
+    
+    return $queryResult;
+  }
+
   public function createOrder(): int
   {
     $order = new Order();

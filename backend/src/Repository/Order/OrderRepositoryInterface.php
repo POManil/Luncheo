@@ -9,6 +9,7 @@ interface OrderRepositoryInterface
 {
   public function getAll(): array;
   public function getById(int $id): ?Order;
+  public function getByUserId(int $userId): array;
   public function createOrder(): int;
   public function updateOrder(Order $order): void;
   public function upsertOrderLine(Order $order, OrderLine $line): void;

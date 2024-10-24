@@ -13,6 +13,7 @@ use Psr\Log\LoggerInterface;
 use App\DTO\OrderDTO;
 use App\DTO\OrderLineDTO;
 use App\DTO\PaymentDTO;
+use App\DTO\UserDTO;
 use App\Validation\ConstraintValidator;
 use App\Repository\Order\OrderRepositoryInterface;
 use App\Repository\OrderLine\OrderLineRepositoryInterface;
@@ -55,6 +56,30 @@ class OrderController extends AbstractController
       $orderDtos = array_map(fn($order) => OrderDTO::mapFromOrder($order), $orderEntities);
 
       return new JsonResponse($orderDtos);
+
+    } catch (\Exception $e) {
+      $this->logger->error($e);
+
+      return new JsonResponse(["message" => "Une erreur imprévue est survenue"], 500);
+    }
+  }
+
+  public function getByUserId(string $userId): JsonResponse
+  {
+    if(!is_numeric($userId)) {
+      return new JsonResponse(["validation" => "L'identifiant de l'utilisateur doit être un entier positif."], 400);
+    }
+    
+    try {
+      $userEntity = $this->userRepository->getById((int)$userId);
+      if(is_null($userEntity)) {
+        return new JsonResponse(["message" => "Utilisateur non-trouvé"], 404);
+      }
+
+      $orderEntities = $this->orderRepository->getByUserId((int)$userId);
+      $orderDtos = array_map(fn($order) => OrderDTO::mapFromOrder($order), $orderEntities);
+
+      return new JsonResponse(["user" => UserDTO::mapFromUser($userEntity), "orders" => $orderDtos], 200);
 
     } catch (\Exception $e) {
       $this->logger->error($e);

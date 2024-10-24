@@ -3,6 +3,11 @@ order_get_all:
   controller: App\Controller\OrderController::getAll
   methods: [GET]
 
+order_get_by_user:
+  path: /order/{userId}
+  controller: App\Controller\OrderController::getByUserId
+  methods: [GET]
+  
 create_order:
   path: /order
   controller: App\Controller\OrderController::createOrder
