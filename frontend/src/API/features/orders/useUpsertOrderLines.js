@@ -7,17 +7,8 @@ export const useUpsertOrderLines = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: ({orderLine}) => upsertOrderLine(client, orderLine),
-    onMutate: async (orderLine) => {
-      await queryClient.cancelQueries({queryKey: ['orders']});
-      const prevState = queryClient.getQueryData(['orders']);
-
-      queryClient.setQueryData(['orders'], (old = []) => [
-        ...old,
-        { ...orderLine, status: 'optimistic' }
-      ]);
-
-      return prevState;
+    mutationFn: ({orderLine}) => {
+      upsertOrderLine(client, orderLine)
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['orders'] });
