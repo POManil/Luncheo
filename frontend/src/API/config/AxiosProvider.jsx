@@ -5,7 +5,7 @@ import { BASE_URL } from '../../helpers/constants';
 import PropTypes from 'prop-types';
 
 export const AxiosProvider = ({ children }) => {
-  const token = null;
+  const token = null; // useAuthentication() when AuthProvider is configured
 
   const client = useMemo(() => {
     const headers = token != null

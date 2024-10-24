@@ -1,10 +1,44 @@
-import { Card } from "antd";
+import { Button, Card, InputNumber } from "antd";
 import PropTypes from "prop-types";
 
 import * as Formatter from "../../helpers/formatter";
 import UserDropDown from "../Users/UserDropDown";
+import { useState } from "react";
+import SandwichDropDown from "../Sandwiches/SandwichesDropDown";
+import { useUpsertOrderLines } from "../../API/features/orders/useUpsertOrderLines";
 
 const Order = ({order}) => {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [newOrderLine, setNewOrderLine] = useState({
+    orderId: order.id, 
+    sandwichId: null, 
+    userId: null, 
+    quantity: 0
+  });
+
+  const upsertOrderLineHandler = useUpsertOrderLines();
+
+  const handleOrderLineChange = (key) => (value) => {
+    setNewOrderLine(previous => ({
+      ...previous,
+      [key] : value
+    }));
+  }
+
+  const toggleEditMode = (e) => {
+    e.preventDefault();
+    setIsEditMode(!isEditMode);
+  }
+
+  const saveOrder = async () => {
+    try {
+      console.log("nol", newOrderLine)
+      await upsertOrderLineHandler.mutateAsync({newOrderLine});
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const orderTotalPrice = () => order.lines.reduce((result, line) => result + line.price, .0);
 
   return (
@@ -33,7 +67,23 @@ const Order = ({order}) => {
           </Card>
         )
       }
-      <UserDropDown />
+      {
+        isEditMode && (
+          <div style={{display: 'flex', flexDirection: 'column', marginTop: '10px'}}>
+            <UserDropDown onSelect={() => handleOrderLineChange("userId")}/>
+            <SandwichDropDown onSelect={() => handleOrderLineChange("sandwichId")}/>
+            <InputNumber min={1} max={1000} defaultValue={1} onChange={() => handleOrderLineChange("quantity")}/>
+
+            <Button onClick={saveOrder} style={{marginTop: "10px"}}>
+              Enregistrer
+            </Button>
+          </div>
+        )
+      }
+
+      <Button onClick={toggleEditMode} style={{marginTop: "10px"}}>
+      { isEditMode ? "Annuler" : "Editer" }  
+      </Button>
     </Card>
   )
 }
