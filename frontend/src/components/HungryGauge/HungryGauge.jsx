@@ -9,11 +9,11 @@ import fourLogo from '../../assets/HungryGaugeLogos/80_percent.png'
 import fiveLogo from '../../assets/HungryGaugeLogos/100_percent.png'
 
 export const HungryGauge = () => {
-  const konamiCode = [
+  const konamiCode = useMemo(() => [
     'ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown',
     'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight',
     'b', 'a', 'Enter'
-  ];
+  ], []);
 
   const [percent, setPercent] = useState(0)
   const [isAnimating, setIsAnimating] = useState(false);
@@ -33,22 +33,22 @@ export const HungryGauge = () => {
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, []);
+  }, [konamiCode.length]);
 
   useEffect(() => {
     if (inputSequence.join(' ') === konamiCode.join(' ')) {
       setDisplayGauge(true);
     }
-  }, [inputSequence]);
+  }, [inputSequence, konamiCode]);
 
   const smileyLogo = useMemo(() => {
-    if (percent < 20) return zeroLogo
-    if (percent < 40) return oneLogo
-    if (percent < 60) return twoLogo
-    if (percent < 80) return threeLogo
-    if (percent < 100) return fourLogo
-    if (percent === 100) return fiveLogo
-  }, [percent])
+    if (percent < 20) return zeroLogo;
+    if (percent < 40) return oneLogo;
+    if (percent < 60) return twoLogo;
+    if (percent < 80) return threeLogo;
+    if (percent < 100) return fourLogo;
+    else return fiveLogo;
+  }, [percent]);
 
   const increaseProgress = () => {
     setIsAnimating(true);
@@ -75,7 +75,7 @@ export const HungryGauge = () => {
             style={{ transform: 'rotate(-90deg)' }}
           />
           <Button type="primary" style={{ top: "240px" }} onClick={increaseProgress}> 
-            J'ai faim !
+            {`J'ai faim !`}
           </Button>
           <div
             style={{

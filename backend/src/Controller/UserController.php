@@ -35,7 +35,7 @@ class UserController extends AbstractController
       $userEntities = $this->repository->getAll();
       $userDtos = array_map(fn($user) => UserDTO::mapFromUser($user), $userEntities);
 
-      return new JsonResponse(['users' => $userDtos]);
+      return new JsonResponse($userDtos);
 
     } catch (\Exception $e) {
       $this->logger->error($e);
