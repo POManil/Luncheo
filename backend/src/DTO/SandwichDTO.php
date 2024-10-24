@@ -8,9 +8,9 @@ class SandwichDTO
 {
   public ?int $id;
   public ?string $label;
-  public ?int $unitPrice;
+  public ?float $unitPrice;
 
-  public function __construct(?int $id, ?string $label, ?int $unitPrice)
+  public function __construct(?int $id, ?string $label, ?float $unitPrice)
   {
     $this->id = $id;
     $this->label = $label;
